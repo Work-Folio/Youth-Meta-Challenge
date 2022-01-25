@@ -1,10 +1,9 @@
-import 'package:carbon_traffic_light/screens/device_screen.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import './device_screen.dart';
 import './option_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConnectDeviceScreen extends StatefulWidget {
   const ConnectDeviceScreen({Key? key}) : super(key: key);
