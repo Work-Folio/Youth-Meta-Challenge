@@ -3,7 +3,7 @@ from spike.control import wait_for_seconds
 from math import pi
 
 class Robot:
-    TURN_DEGREE_CONST = 11.3 * pi / 360
+    TURN_DEGREE_CONST = 11.5 * pi / 360
     MOVE_MOTORS_OPTION = 'coast'
     DEFAULT_MOVE_SPEED = 50
     DEFAULT_TURN_SPEED = 50
@@ -31,12 +31,12 @@ class Robot:
         self.color_sensor = ColorSensor(self.COLOR_SENSOR_PORT)
         self.distance_sensor = DistanceSensor(self.DISTANCE_SENSOR_PORT)
         self.setup()
-    
+
     def setup(self):
         self.catch_up()
         self.move_motors.set_stop_action(self.MOVE_MOTORS_OPTION)
 
-    def move(self, amount: float = 0, speed: float = DEFAULT_MOVE_SPEED, steering: float = 0):
+    def move(self, amount: float = 0, speed: int = DEFAULT_MOVE_SPEED, steering: int = 0):
         if amount == 0:
             self.move_motors.start(steering=steering, speed=speed)
         else:
@@ -45,12 +45,12 @@ class Robot:
     def move_stop(self):
         self.move_motors.stop()
 
-    def turn_right(self, degree: float = 90, speed: float = DEFAULT_TURN_SPEED):
+    def turn_right(self, degree: int = 90, speed: int = DEFAULT_TURN_SPEED):
         self.move_motors.move(self.TURN_DEGREE_CONST * degree, steering=100, speed=speed)
 
-    def turn_left(self, degree: float = 90, speed: float = DEFAULT_TURN_SPEED):
+    def turn_left(self, degree: int = 90, speed: int = DEFAULT_TURN_SPEED):
         self.move_motors.move(self.TURN_DEGREE_CONST * degree, steering=-100, speed=speed)
-    
+
     def catch_up(self):
         self.catch_motor.run_to_position(self.CATCH_UP_DEGREE)
 
@@ -62,7 +62,7 @@ class Robot:
 
     def wait_line(self, color: str = DEFAULT_LINE_COLOR):
         self.color_sensor.wait_until_color(color)
-    
+
     def wait_distance(self, distance: float):
         self.distance_sensor.wait_for_distance_closer_than(distance)
 
@@ -90,6 +90,7 @@ class Mission(Robot):
         self.move_stop()
         self.catch_up()
         self.move(35, speed=-50)
+        self.move_stop()
         self.turn_right()
         self.move()
         self.wait_line()
@@ -106,7 +107,7 @@ class Mission(Robot):
         self.move()
         self.wait_line(color='red')
         self.move_stop()
-    
+
     def mission4(self):
         self.move(5)
         while True:
@@ -139,6 +140,9 @@ class Mission(Robot):
         self.catch_down()
         self.move(110, speed=100)
         self.catch_up()
+
+    def plus_mission(self):
+        pass
 
     def all_mission(self):
         self.mission1()
