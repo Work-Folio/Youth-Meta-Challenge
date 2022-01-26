@@ -1,9 +1,10 @@
+from os import sep
 from spike import PrimeHub, ColorSensor, DistanceSensor, Motor, MotorPair
 from spike.control import wait_for_seconds
 from math import pi
 
 class Robot:
-    TURN_DEGREE_CONST = 11.5 * pi / 360
+    TURN_DEGREE_CONST = 11.3 * pi / 360
     MOVE_MOTORS_OPTION = 'coast'
     DEFAULT_MOVE_SPEED = 50
     DEFAULT_TURN_SPEED = 50
@@ -142,7 +143,24 @@ class Mission(Robot):
         self.catch_up()
 
     def plus_mission(self):
-        pass
+        self.move()
+        self.wait_line()
+        self.move_stop()
+        self.turn_right()
+        self.move()
+        self.wait_line()
+        self.move_stop()
+        self.turn_right()
+        self.move()
+        self.wait_line()
+        self.move_stop()
+        self.move(4)
+        self.catch_down()
+        self.move(8, speed=25)
+        self.turn_right()
+        self.move()
+        self.wait_line()
+        self.move_stop()
 
     def all_mission(self):
         self.mission1()
@@ -153,4 +171,6 @@ class Mission(Robot):
         self.mission6()
         self.mission7()
 
-Mission().all_mission()
+mission = Mission()
+mission.all_mission()
+# mission.plus_mission()
