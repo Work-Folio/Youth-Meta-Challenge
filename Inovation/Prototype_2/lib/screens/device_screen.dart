@@ -23,7 +23,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
   late final double _yellowLevel;
   late final double _redLevel;
   MaterialColor _color = Colors.green;
-  
+
   @override
   void initState() {
     super.initState();
@@ -55,14 +55,16 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
   void _sendCommand(String command) {
     if (widget.connection.isConnected) {
-      widget.connection.output.add(Uint8List.fromList(utf8.encode(command + '\r\n')));
+      widget.connection.output
+          .add(Uint8List.fromList(utf8.encode(command + '\r\n')));
     }
   }
 
   void _startSwatch() {
     if (!_swatch.isRunning) {
       _swatch.start();
-      _timer = Timer.periodic(const Duration(milliseconds: 100), (_) => setState(() {}));
+      _timer = Timer.periodic(
+          const Duration(milliseconds: 100), (_) => setState(() {}));
     }
   }
 
@@ -74,7 +76,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
   }
 
   double _getCarbon() {
-    double carbon =  _electricPower / 3600 * _swatch.elapsed.inSeconds * 0.424;
+    double carbon = _electricPower / 3600 * _swatch.elapsed.inSeconds * 0.424;
     if (_color == Colors.green && carbon >= _yellowLevel) {
       _sendCommand('y');
       _color = Colors.yellow;
@@ -86,45 +88,47 @@ class _DeviceScreenState extends State<DeviceScreen> {
     return carbon;
   }
 
-  String _getSwatchTime() => '${_swatch.elapsed.inHours.toString().padLeft(2,'0')} : ${(_swatch.elapsed.inMinutes%60).toString().padLeft(2, '0')} : ${(_swatch.elapsed.inSeconds%60).toString().padLeft(2, '0')}';
+  String _getSwatchTime() =>
+      '${_swatch.elapsed.inHours.toString().padLeft(2, '0')} : ${(_swatch.elapsed.inMinutes % 60).toString().padLeft(2, '0')} : ${(_swatch.elapsed.inSeconds % 60).toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _color,
-      appBar: AppBar(
-        title: const Text('측정'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: _isOptionsLoad ? Text (
-                '${_getCarbon().toStringAsFixed(5)} Kg',
+        backgroundColor: _color,
+        appBar: AppBar(
+          title: const Text('측정'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: _isOptionsLoad
+                    ? Text(
+                        '${_getCarbon().toStringAsFixed(5).replaceAll(RegExp(r'([.]*0+)(?!.*\d)'), '')} Kg',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 50,
+                        ),
+                      )
+                    : const Text(
+                        '0 Kg',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 50,
+                        ),
+                      ),
+              ),
+              Text(
+                _getSwatchTime(),
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 50,
-                ),
-              ) : const Text (
-                '0 Kg',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 50,
+                  fontSize: 30,
                 ),
               ),
-            ),
-            Text(
-              _getSwatchTime(),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-              ),
-            ),
-          ],
-        ),
-      )
-    );
+            ],
+          ),
+        ));
   }
 }
